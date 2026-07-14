@@ -329,15 +329,16 @@ st.caption("Upload documents · Ask questions · Track retrieval quality")
 with st.sidebar:
     st.header("Configuration")
 
-    api_key = st.text_input(
+    # pull from Streamlit secrets first, fall back to manual input
+    api_key = st.secrets.get("ANTHROPIC_API_KEY", "") or st.text_input(
         "Anthropic API Key",
         type="password",
         placeholder="sk-ant-...",
-        help="Get yours at console.anthropic.com — free trial credits included",
+        help="Get yours at console.anthropic.com",
     )
 
     if api_key:
-        st.success("API key set")
+        st.success("Ready")
     else:
         st.warning("Add your API key to get started")
 
