@@ -1,0 +1,23 @@
+Introduction to Retrieval-Augmented Generation
+
+Retrieval-Augmented Generation (RAG) combines information retrieval with language generation.
+When a user asks a question, the system searches a document store for relevant passages,
+then includes those passages in the prompt sent to the language model.
+
+RAG addresses two key problems with language models: knowledge cutoff dates and hallucination.
+By retrieving current, specific information at query time, the model can give grounded answers.
+
+Key components: document ingestion (loading and chunking), embedding (converting text to vectors),
+vector storage (indexing for similarity search), retrieval (finding relevant chunks),
+and generation (the LLM synthesising an answer from retrieved context).
+
+Evaluation is critical. Retrieval precision measures whether retrieved chunks are actually
+relevant. Answer faithfulness measures whether the answer stays within the retrieved context.
+Tracking these metrics guides improvements to chunking strategy and retrieval parameters.
+
+Chunking strategies: fixed-size splits by token count; semantic splitting respects sentence
+boundaries; sliding window uses overlapping chunks to preserve boundary context.
+
+Common failure modes: poor chunking that breaks context, embedding models that miss
+domain-specific terms, retrieving too few or too many chunks and prompts that don't
+anchor the model to the retrieved context.
