@@ -32,7 +32,7 @@ Most RAG demos stop at "ask a question about one PDF." That tells you nothing ab
 ## Installation
 
 ```bash
-git clone https://github.com/<your-username>/intelligent-document-qa
+git clone https://github.com/Saravanan-vasudevan/Rag-Evaluation-Engine
 cd intelligent-document-qa
 pip install -r requirements.txt
 ```
