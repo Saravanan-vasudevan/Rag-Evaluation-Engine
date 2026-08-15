@@ -55,9 +55,9 @@ streamlit run app.py
 
 Open the URL Streamlit prints (usually `http://localhost:8501`), then:
 
-1. **Upload tab** — drop in a PDF/text file, or click "Load sample document" to try it without your own files
-2. **Query tab** — ask a question and see the answer with cited source passages
-3. **Evaluation tab** — ask a question you already know the answer to and get precision/faithfulness scores, with history tracked over time
+1. **Upload tab** - drop in a PDF/text file, or click "Load sample document" to try it without your own files
+2. **Query tab** - ask a question and see the answer with cited source passages
+3. **Evaluation tab** - ask a question you already know the answer to and get precision/faithfulness scores, with history tracked over time
 
 ## Project structure
 
