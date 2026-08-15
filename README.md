@@ -70,7 +70,7 @@ intelligent-document-qa/
 │   ├── chunking.py              # fixed-size and semantic chunking
 │   ├── loaders.py                # PDF / text file readers
 │   ├── vectorstore.py           # ChromaDB collection, ingestion, retrieval
-│   ├── qa.py                     # Claude call + answer assembly
+│   ├── qa.py                     # Groq call + answer assembly
 │   └── evaluation.py            # precision / faithfulness scoring, run log
 ├── ui/
 │   ├── styles.py                 # dashboard CSS
