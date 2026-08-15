@@ -1,25 +1,30 @@
-"""Question answering: retrieve context, call Claude, return a structured answer."""
+"""Question answering: retrieve context, call Groq, return a structured answer."""
 
 import time
 
-import anthropic
+from groq import Groq
 from tenacity import retry, stop_after_attempt, wait_exponential
 
-from .config import ANSWER_MODEL, SYSTEM_PROMPT
+from .config import SYSTEM_PROMPT
 from .vectorstore import retrieve
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10), reraise=True)
-def call_claude(prompt: str, api_key: str) -> str:
-    client = anthropic.Anthropic(api_key=api_key)
-    response = client.messages.create(
-        model=ANSWER_MODEL,
+def call_llm(prompt: str, api_key: str) -> str:
+    # Initialize the Groq client
+    client = Groq(api_key=api_key)
+    
+    # Generate the chat completion using Llama 3
+    response = client.chat.completions.create(
+        model="openai/gpt-oss-20b",
         max_tokens=1024,
-        system=SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": prompt}],
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": prompt}
+        ],
         temperature=0.2,
     )
-    return response.content[0].text
+    return response.choices[0].message.content
 
 
 def answer_question(question: str, top_k: int, api_key: str) -> dict:
@@ -40,7 +45,7 @@ def answer_question(question: str, top_k: int, api_key: str) -> dict:
     )
     prompt = f"Context:\n\n{context_block}\n\n---\n\nQuestion: {question}\n\nAnswer:"
 
-    answer_text = call_claude(prompt, api_key)
+    answer_text = call_llm(prompt, api_key)
 
     return {
         "answer": answer_text,

@@ -41,23 +41,29 @@ st.markdown(DASHBOARD_CSS, unsafe_allow_html=True)
 st.markdown("""
 <div class="hero-container">
     <h1 class="hero-title">Intelligent Document QA</h1>
-    <p class="hero-subtitle">Upload a document, ask questions, and track how well the answers hold up — built on Claude and ChromaDB.</p>
+    <p class="hero-subtitle">Upload a document, ask questions, and track how well the answers hold up — built on Groq and ChromaDB.</p>
 </div>
 """, unsafe_allow_html=True)
 
 
 # --- sidebar: config + collection controls ---------------------------------
 
+# --- sidebar: config + collection controls ---------------------------------
+
 with st.sidebar:
     st.header("Configuration")
 
-    api_key = st.secrets.get("ANTHROPIC_API_KEY", "") or st.text_input(
-        "Anthropic API Key",
+    api_key = st.secrets.get("GROQ_API_KEY", "") or st.text_input(
+        "GROQ API Key",
         type="password",
-        placeholder="sk-ant-...",
-        help="Get yours at console.anthropic.com",
+        placeholder="gsk_...",
+        help="Get yours at console.groq.com",
     )
-    st.success("Ready") if api_key else st.warning("Add your API key to get started")
+
+    if api_key:
+        st.success("Ready")
+    else:
+        st.warning("Add your API key to get started")
 
     st.divider()
 
@@ -136,7 +142,7 @@ with tab_query:
     st.subheader("Ask a question")
 
     if not api_key:
-        st.warning("Add your Anthropic API key in the sidebar to ask questions.")
+        st.warning("Add your GROQ API key in the sidebar to ask questions.")
     elif collection.count() == 0:
         st.info("No documents indexed yet. Add some in the Upload tab first.")
     else:
@@ -154,7 +160,7 @@ with tab_query:
                     render_metric_grid([
                         {"label": "Latency", "value": f"{result['latency_ms']}ms", "accent": "cyan"},
                         {"label": "Chunks used", "value": result["chunks_used"]},
-                        {"label": "Model", "value": "Claude Sonnet"},
+                        {"label": "Model", "value": "Llama 3 (via Groq)"},
                     ])
                     render_sources(result.get("sources", []))
                 except Exception as exc:
@@ -167,11 +173,11 @@ with tab_eval:
     st.subheader("Evaluation")
     st.write(
         "Ask a question you already know the answer to and get retrieval precision "
-        "and answer faithfulness scores, judged by a second Claude call."
+        "and answer faithfulness scores, judged by a second Llama call."
     )
 
     if not api_key:
-        st.warning("Add your Anthropic API key in the sidebar to run evaluations.")
+        st.warning("Add your Groq API key in the sidebar to run evaluations.")
     elif collection.count() == 0:
         st.info("No documents indexed yet. Add some in the Upload tab first.")
     else:

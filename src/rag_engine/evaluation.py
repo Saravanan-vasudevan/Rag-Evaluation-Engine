@@ -1,16 +1,13 @@
 """LLM-as-judge scoring for retrieval precision and answer faithfulness,
 plus a small JSON log of past evaluation runs.
-
-Judging is done with a cheaper Claude model since it's a secondary call
-and doesn't need the same reasoning budget as the primary answer.
 """
 
 import json
 from pathlib import Path
 
-import anthropic
+from groq import Groq
 
-from .config import EVAL_LOG_PATH, JUDGE_MODEL
+from .config import EVAL_LOG_PATH
 
 
 def score_faithfulness(question: str, answer: str, chunks: list[dict], api_key: str) -> dict:
@@ -23,19 +20,19 @@ Context: {context}
 Question: {question}
 Answer: {answer}
 
-Respond ONLY with JSON: {{"faithfulness": 0.85, "explanation": "brief reason"}}"""
+Respond ONLY with a valid JSON object: {{"faithfulness": 0.85, "explanation": "brief reason"}}"""
 
     try:
-        client = anthropic.Anthropic(api_key=api_key)
-        response = client.messages.create(
-            model=JUDGE_MODEL,
-            max_tokens=150,
+        client = Groq(api_key=api_key)
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            max_tokens=250,
             messages=[{"role": "user", "content": prompt}],
+            temperature=0.0,
+            response_format={"type": "json_object"}
         )
-        return json.loads(response.content[0].text.strip())
+        return json.loads(response.choices[0].message.content.strip())
     except Exception as exc:
-        # judge call failing shouldn't take down the whole eval run — surface a
-        # sentinel score so the UI can show "scoring failed" instead of crashing
         return {"faithfulness": -1.0, "explanation": f"Scoring failed: {exc}"}
 
 
@@ -47,20 +44,23 @@ def score_precision(question: str, chunks: list[dict], api_key: str) -> dict:
 Question: {question}
 {chunk_list}
 
-Respond ONLY with JSON array:
-[{{"chunk": 1, "relevant": true, "reason": "brief"}}]"""
+Respond ONLY with a valid JSON object containing a "judgements" array:
+{{"judgements": [{{"chunk": 1, "relevant": true, "reason": "brief"}}]}}"""
 
     try:
-        client = anthropic.Anthropic(api_key=api_key)
-        response = client.messages.create(
-            model=JUDGE_MODEL,
-            max_tokens=400,
+        client = Groq(api_key=api_key)
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            max_tokens=500,
             messages=[{"role": "user", "content": prompt}],
+            temperature=0.0,
+            response_format={"type": "json_object"}
         )
-        judgements = json.loads(response.content[0].text.strip())
+        content = json.loads(response.choices[0].message.content.strip())
+        judgements = content.get("judgements", [])
         relevant_count = sum(1 for j in judgements if j.get("relevant", False))
         return {
-            "precision": round(relevant_count / len(chunks), 3),
+            "precision": round(relevant_count / len(chunks), 3) if chunks else 0.0,
             "relevant_count": relevant_count,
             "judgements": judgements,
         }

@@ -19,6 +19,16 @@ Most RAG demos stop at "ask a question about one PDF." That tells you nothing ab
 - **Run history** — evaluation results are logged locally and can be exported to CSV
 - **Sample document** — a short RAG explainer bundled in, for trying the app without your own files
 
+## Screenshots
+
+**Query — ask a question and get cited answers:**
+
+![RAG Query](assets/rag_query.png)
+
+**Evaluation — score retrieval precision and answer faithfulness:**
+
+![RAG Evaluation](assets/rag_evaluation.png)
+
 ## Installation
 
 ```bash

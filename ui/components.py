@@ -9,17 +9,16 @@ import streamlit as st
 
 
 def render_answer_card(answer_text: str) -> None:
-    st.markdown(f"""
-    <div class="qa-card">
-        <div class="chat-bubble-container">
-            <div class="chat-avatar">AI</div>
-            <div class="chat-text">
-                <strong style="color: #00f2fe; font-size: 1.1rem; display:block; margin-bottom: 8px;">Answer</strong>
-                {answer_text}
-            </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    html = f"""<div class="qa-card">
+<div class="chat-bubble-container">
+<div class="chat-avatar">AI</div>
+<div class="chat-text">
+<strong style="color: #00f2fe; font-size: 1.1rem; display:block; margin-bottom: 8px;">Answer</strong>
+{answer_text}
+</div>
+</div>
+</div>"""
+    st.markdown(html, unsafe_allow_html=True)
 
 
 def render_metric_grid(metrics: list[dict]) -> None:
@@ -27,12 +26,11 @@ def render_metric_grid(metrics: list[dict]) -> None:
     boxes = ""
     for metric in metrics:
         accent_class = f" {metric['accent']}" if metric.get("accent") else ""
-        boxes += f"""
-        <div class="metric-box">
-            <div class="metric-label">{metric['label']}</div>
-            <div class="metric-value{accent_class}">{metric['value']}</div>
-        </div>
-        """
+        boxes += f"""<div class="metric-box">
+<div class="metric-label">{metric['label']}</div>
+<div class="metric-value{accent_class}">{metric['value']}</div>
+</div>"""
+    
     st.markdown(f'<div class="metric-grid">{boxes}</div>', unsafe_allow_html=True)
 
 
@@ -41,12 +39,11 @@ def render_sources(sources: list[dict]) -> None:
         return
     st.markdown("### Source passages")
     for i, chunk in enumerate(sources, 1):
-        st.markdown(f"""
-        <div class="source-card">
-            <div class="source-header">
-                <span class="source-title">Passage {i} — Source: <strong>{chunk['source']}</strong></span>
-                <span class="source-score">Relevance score: {chunk['score']:.3f}</span>
-            </div>
-            <div class="source-body">"{chunk['text']}"</div>
-        </div>
-        """, unsafe_allow_html=True)
+        html = f"""<div class="source-card">
+<div class="source-header">
+<span class="source-title">Passage {i} — Source: <strong>{chunk['source']}</strong></span>
+<span class="source-score">Relevance score: {chunk['score']:.3f}</span>
+</div>
+<div class="source-body">"{chunk['text']}"</div>
+</div>"""
+        st.markdown(html, unsafe_allow_html=True)
