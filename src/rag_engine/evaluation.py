@@ -3,6 +3,7 @@ plus a small JSON log of past evaluation runs.
 """
 
 import json
+from .config import EVAL_LOG_PATH, EVAL_MODEL
 from pathlib import Path
 
 from groq import Groq
@@ -25,7 +26,7 @@ Respond ONLY with a valid JSON object: {{"faithfulness": 0.85, "explanation": "b
     try:
         client = Groq(api_key=api_key)
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="EVAL_MODEL",
             max_tokens=250,
             messages=[{"role": "user", "content": prompt}],
             temperature=0.0,

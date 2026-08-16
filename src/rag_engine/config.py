@@ -11,8 +11,8 @@ EVAL_LOG_PATH = os.environ.get("EVAL_LOG_PATH", "/tmp/eval_log.json")
 COLLECTION_NAME = "document_store"
 
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
-ANSWER_MODEL = "claude-sonnet-4-6"
-JUDGE_MODEL = "claude-haiku-4-5-20251001"  # cheaper model for eval scoring, doesn't need to be as strong
+ANSWER_MODEL = "llama-3.3-70b-versatile"
+JUDGE_MODEL = "llama-3.1-8b-instant"  # cheaper model for eval scoring, doesn't need to be as strong
 
 SYSTEM_PROMPT = """You are a precise document assistant. Answer questions using only
 the context passages provided. If the context doesn't contain enough information,
