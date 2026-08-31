@@ -3,12 +3,11 @@ plus a small JSON log of past evaluation runs.
 """
 
 import json
-from .config import EVAL_LOG_PATH, EVAL_MODEL
 from pathlib import Path
 
 from groq import Groq
 
-from .config import EVAL_LOG_PATH
+from .config import EVAL_LOG_PATH, JUDGE_MODEL
 
 
 def score_faithfulness(question: str, answer: str, chunks: list[dict], api_key: str) -> dict:
@@ -26,7 +25,7 @@ Respond ONLY with a valid JSON object: {{"faithfulness": 0.85, "explanation": "b
     try:
         client = Groq(api_key=api_key)
         response = client.chat.completions.create(
-            model="EVAL_MODEL",
+            model=JUDGE_MODEL,
             max_tokens=250,
             messages=[{"role": "user", "content": prompt}],
             temperature=0.0,
@@ -51,7 +50,7 @@ Respond ONLY with a valid JSON object containing a "judgements" array:
     try:
         client = Groq(api_key=api_key)
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model=JUDGE_MODEL,
             max_tokens=500,
             messages=[{"role": "user", "content": prompt}],
             temperature=0.0,

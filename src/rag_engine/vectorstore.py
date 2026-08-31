@@ -7,7 +7,7 @@ import chromadb
 import streamlit as st
 
 from .config import CHROMA_DIR, COLLECTION_NAME
-from .chunking import chunk_fixed, chunk_semantic
+from .chunking import chunk_fixed, chunk_sentence_aware
 from .embeddings import embed_texts, embed_query
 
 
@@ -27,10 +27,10 @@ def clear_collection() -> None:
     get_collection.clear()  # force the cached resource to rebuild on next access
 
 
-def ingest_document(text: str, filename: str, strategy: str = "semantic", chunk_size: int = 400) -> int:
+def ingest_document(text: str, filename: str, strategy: str = "sentence-aware", chunk_size: int = 400) -> int:
     """Chunk, embed and store a document. Returns the number of chunks written."""
-    if strategy == "semantic":
-        pieces = chunk_semantic(text, chunk_size)
+    if strategy == "sentence-aware":
+        pieces = chunk_sentence_aware(text, chunk_size)
     else:
         pieces = chunk_fixed(text, chunk_size, overlap=80)
 

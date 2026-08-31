@@ -16,6 +16,10 @@ def _encoder():
 
 
 def chunk_fixed(text: str, chunk_size: int = 400, overlap: int = 80) -> list[str]:
+    if chunk_size <= 0:
+        raise ValueError("chunk_size must be greater than zero")
+    if overlap < 0 or overlap >= chunk_size:
+        raise ValueError("overlap must be at least zero and smaller than chunk_size")
     enc = _encoder()
     tokens = enc.encode(text)
     chunks = []
@@ -27,7 +31,7 @@ def chunk_fixed(text: str, chunk_size: int = 400, overlap: int = 80) -> list[str
     return chunks
 
 
-def chunk_semantic(text: str, target_size: int = 400) -> list[str]:
+def chunk_sentence_aware(text: str, target_size: int = 400) -> list[str]:
     enc = _encoder()
     # naive sentence split — good enough for the doc types this handles (reports,
     # articles, notes). Doesn't cope well with abbreviations like "Dr." but that's
@@ -61,3 +65,7 @@ def chunk_semantic(text: str, target_size: int = 400) -> list[str]:
         chunks.append(" ".join(current))
 
     return chunks
+
+
+# Kept as an alias so existing imports continue to work.
+chunk_semantic = chunk_sentence_aware

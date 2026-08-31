@@ -48,8 +48,6 @@ st.markdown("""
 
 # --- sidebar: config + collection controls ---------------------------------
 
-# --- sidebar: config + collection controls ---------------------------------
-
 with st.sidebar:
     st.header("Configuration")
 
@@ -74,8 +72,8 @@ with st.sidebar:
     top_k = st.slider("Chunks to retrieve", 1, 10, 5)
     chunking_strategy = st.selectbox(
         "Chunking strategy",
-        ["semantic", "fixed"],
-        help="Semantic respects sentence boundaries. Fixed splits by token count.",
+        ["sentence-aware", "fixed"],
+        help="Sentence-aware avoids cutting normal prose mid-sentence. Fixed splits by token count.",
     )
 
     st.divider()
@@ -97,9 +95,9 @@ with tab_upload:
     st.subheader("Upload documents")
     st.write(
         "Supports PDF and plain text files (`.txt`, `.md`). Uploaded documents "
-        "get chunked, embedded, and added to the local vector store."
+        "are split into chunks, embedded, and added to the local vector store."
     )
-    st.info("Longer documents work better with semantic chunking — keep the default unless you're testing.")
+    st.info("Sentence-aware chunking is a useful default for reports and normal prose.")
 
     uploaded_files = st.file_uploader(
         "Drop files here",

@@ -4,9 +4,7 @@ import time
 
 from groq import Groq
 from tenacity import retry, stop_after_attempt, wait_exponential
-from .config import SYSTEM_PROMPT, ANSWER_MODEL
-
-from .config import SYSTEM_PROMPT
+from .config import ANSWER_MODEL, SYSTEM_PROMPT
 from .vectorstore import retrieve
 
 
@@ -17,7 +15,7 @@ def call_llm(prompt: str, api_key: str) -> str:
     
     # Generate the chat completion using Llama 3
     response = client.chat.completions.create(
-        model="ANSWER_MODEL",
+        model=ANSWER_MODEL,
         max_tokens=1024,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
