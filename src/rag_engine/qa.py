@@ -10,10 +10,8 @@ from .vectorstore import retrieve
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10), reraise=True)
 def call_llm(prompt: str, api_key: str) -> str:
-    # Initialize the Groq client
     client = Groq(api_key=api_key)
-    
-    # Generate the chat completion using Llama 3
+
     response = client.chat.completions.create(
         model=ANSWER_MODEL,
         max_tokens=1024,
